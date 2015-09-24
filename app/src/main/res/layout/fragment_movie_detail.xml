@@ -1,0 +1,81 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:showIn="@layout/activity_movie_detail"
+    tools:context="com.salvasavall.p2_popmov.MovieDetailFragment"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="103dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#259ba1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:id="@+id/textTitle"
+                android:layout_gravity="left|center_vertical"
+                android:textColor="#ffffff"
+                android:textSize="@dimen/font_size_large"
+                android:paddingLeft="10dp" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageThumbnail"
+                android:paddingLeft="15dp"
+                android:minHeight="200dp"
+                android:minWidth="150dp"
+                android:contentDescription="@string/poster_thumbnail_description" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textReleaseDate"
+                    android:textSize="@dimen/font_size_medium"
+                    android:paddingTop="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textRating"
+                    android:textSize="@dimen/font_size_small"
+                    android:paddingTop="10dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textSynopsis"
+            android:textSize="@dimen/font_size_small"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp" />
+
+    </LinearLayout>
+
+</ScrollView>
