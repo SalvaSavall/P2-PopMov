@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -45,6 +46,20 @@ public class MovieDetailFragment extends Fragment {
 
             TextView textRating = (TextView) rootView.findViewById(R.id.textRating);
             textRating.setText(String.valueOf(movie.getRating())+"/10");
+
+            //Trailers views
+            LinearLayout layoutDetailTrailers = (LinearLayout) rootView.findViewById(R.id.layoutDetailTrailers);
+            for(Trailer t : movie.getTrailers()) {
+                View viewTrailer = inflater.inflate(R.layout.trailer_item, null);
+
+                TextView textView = (TextView) viewTrailer.findViewById(R.id.textTrailer);
+                textView.setText(t.getName());
+
+                ImageView imageTrailer = (ImageView) viewTrailer.findViewById(R.id.imageTrailer);
+                imageTrailer.setOnClickListener(new PlayListener(t.getKey()));
+
+                layoutDetailTrailers.addView(viewTrailer);
+            }
         }
 
         return rootView;

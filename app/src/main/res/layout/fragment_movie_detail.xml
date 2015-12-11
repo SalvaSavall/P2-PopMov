@@ -76,6 +76,27 @@
             android:paddingLeft="10dp"
             android:paddingTop="10dp" />
 
+        <View style="@style/Divider3"
+            android:layout_margin="3dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trailers:"
+            android:id="@+id/textView"
+            android:layout_marginBottom="1dp"
+            android:textSize="@dimen/font_size_medium" />
+
+        <!-- Populated dynamically in MovieDetailFragment.java -->
+        <LinearLayout
+            android:id="@+id/layoutDetailTrailers"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/vertical_divider_1"
+            android:showDividers="middle" />
+
+
     </LinearLayout>
 
 </ScrollView>

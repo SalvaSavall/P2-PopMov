@@ -3,14 +3,14 @@ package com.salvasavall.p2_popmov;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by Salva on 26/08/2015.
- */
+import java.util.ArrayList;
+
 public class Movie implements Parcelable {
 
     int id;
     String title, synopsis, release, poster;
     Double rating;
+    ArrayList<Trailer> trailers;
 
     private final int posterSize = 185;
     private final int thumbnailSize = 154;
@@ -27,6 +27,8 @@ public class Movie implements Parcelable {
 
     public Movie() {
     }
+
+    public int getId() { return id; }
 
     public String getTitle() { return title; }
 
@@ -46,6 +48,11 @@ public class Movie implements Parcelable {
     public String getRelease() { return release; }
     public double getRating() { return rating; }
 
+    public void setTrailers(ArrayList<Trailer> trailers) {
+        this.trailers = trailers;
+    }
+
+    public ArrayList<Trailer> getTrailers() { return trailers; }
 
     @Override
     public int describeContents() {
@@ -59,6 +66,7 @@ public class Movie implements Parcelable {
         dest.writeString(release);
         dest.writeString(poster);
         dest.writeDouble(rating);
+        dest.writeTypedList(trailers);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR =
@@ -81,5 +89,7 @@ public class Movie implements Parcelable {
         this.release = source.readString();
         this.poster = source.readString();
         this.rating = source.readDouble();
+        trailers = new ArrayList<>();
+        source.readTypedList(trailers, Trailer.CREATOR);
     }
 }

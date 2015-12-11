@@ -110,7 +110,7 @@ public class MovieFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList("movies",movies);
+        outState.putParcelableArrayList("movies", movies);
         outState.putString("sortBy",oldSortBy);
         super.onSaveInstanceState(outState);
     }
@@ -172,6 +172,15 @@ public class MovieFragment extends Fragment {
 
                 movieArr.add(new Movie(id, title, synopsis, release,
                         poster, rating));
+            }
+
+            for(Movie movie : movieArr) {
+                String trailerJsonStr;
+                ArrayList<Trailer> trailerArr;
+
+                trailerJsonStr = getTrailerJson(movie.getId());
+                trailerArr = getTrailerDataFromJson(trailerJsonStr);
+                movie.setTrailers(trailerArr);
             }
 
             return movieArr;
@@ -256,6 +265,94 @@ public class MovieFragment extends Fragment {
                 }
                 movieAdapter.notifyDataSetChanged();
             }
+        }
+
+        private String getTrailerJson(int movieId) {
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            String trailerJsonStr = null;
+
+            String apiKey = getString(R.string.api_key_moviedb);
+
+            try {
+                final String TRAILER_BASE_URL = "http://api.themoviedb.org/3/movie/";
+                final String VIDEO_PARAM = "/videos?";
+                final String API_PARAM = "api_key";
+
+                String base = TRAILER_BASE_URL + Integer.toString(movieId) + VIDEO_PARAM;
+
+                Uri builtUri = Uri.parse(base).buildUpon()
+                        .appendQueryParameter(API_PARAM, apiKey)
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuilder buffer = new StringBuilder();
+                if(inputStream == null) {
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                }
+
+                if(buffer.length() == 0) {
+                    return null;
+                }
+                trailerJsonStr = buffer.toString();
+
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error", e);
+            } finally {
+                if(urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if(reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream ", e);
+                    }
+                }
+            }
+
+            return trailerJsonStr;
+        }
+
+        private ArrayList<Trailer> getTrailerDataFromJson(String trailersJsonStr)
+                throws JSONException {
+
+            final String TRAILER_RESULTS = "results";
+            final String TRAILER_NAME = "name";
+            final String TRAILER_KEY = "key";
+
+            JSONObject trailersJson = new JSONObject(trailersJsonStr);
+            JSONArray trailersJArray = trailersJson.getJSONArray(TRAILER_RESULTS);
+
+            ArrayList<Trailer> trailerArr = new ArrayList<>();
+
+            for(int i = 0; i < trailersJArray.length(); i++) {
+                JSONObject trailerJ = trailersJArray.getJSONObject(i);
+
+                String name;
+                String key;
+
+                name = trailerJ.getString(TRAILER_NAME);
+                key = trailerJ.getString(TRAILER_KEY);
+
+                trailerArr.add(new Trailer(name, key));
+            }
+
+            return trailerArr;
         }
     }
 }
