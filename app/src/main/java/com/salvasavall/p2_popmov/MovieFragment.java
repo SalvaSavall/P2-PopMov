@@ -170,17 +170,15 @@ public class MovieFragment extends Fragment {
                 poster = movieJ.getString(MDB_POSTER);
                 rating = movieJ.getDouble(MDB_RATING);
 
-                movieArr.add(new Movie(id, title, synopsis, release,
-                        poster, rating));
-            }
+                Movie movie = new Movie(id, title, synopsis, release,
+                        poster, rating);
 
-            for(Movie movie : movieArr) {
-                String trailerJsonStr;
-                ArrayList<Trailer> trailerArr;
-
-                trailerJsonStr = getTrailerJson(movie.getId());
-                trailerArr = getTrailerDataFromJson(trailerJsonStr);
+                //Get trailers
+                String trailerJsonStr = getTrailerJson(movie.getId());
+                ArrayList<Trailer> trailerArr = getTrailerDataFromJson(trailerJsonStr);
                 movie.setTrailers(trailerArr);
+
+                movieArr.add(movie);
             }
 
             return movieArr;

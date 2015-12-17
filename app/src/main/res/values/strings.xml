@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">P2-PopMov</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_share">Share</string>
     <string name="title_activity_movie_detail">MovieDetail</string>
     <string name="title_activity_settings">Settings</string>
     <string name="message_without_connection">You do not have an active internet connection</string>
