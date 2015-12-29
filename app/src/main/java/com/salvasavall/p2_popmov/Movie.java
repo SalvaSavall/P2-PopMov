@@ -11,6 +11,7 @@ public class Movie implements Parcelable {
     String title, synopsis, release, poster;
     Double rating;
     ArrayList<Trailer> trailers;
+    ArrayList<Review> reviews;
 
     private final int posterSize = 185;
     private final int thumbnailSize = 154;
@@ -54,6 +55,12 @@ public class Movie implements Parcelable {
 
     public ArrayList<Trailer> getTrailers() { return trailers; }
 
+    public void setReviews(ArrayList<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public ArrayList<Review> getReviews() { return reviews; }
+
     @Override
     public int describeContents() {
         return 0;
@@ -67,6 +74,7 @@ public class Movie implements Parcelable {
         dest.writeString(poster);
         dest.writeDouble(rating);
         dest.writeTypedList(trailers);
+        dest.writeTypedList(reviews);
     }
 
     public static final Parcelable.Creator<Movie> CREATOR =
@@ -91,5 +99,7 @@ public class Movie implements Parcelable {
         this.rating = source.readDouble();
         trailers = new ArrayList<>();
         source.readTypedList(trailers, Trailer.CREATOR);
+        reviews = new ArrayList<>();
+        source.readTypedList(reviews, Review.CREATOR);
     }
 }

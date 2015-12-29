@@ -174,9 +174,24 @@ public class MovieFragment extends Fragment {
                         poster, rating);
 
                 //Get trailers
-                String trailerJsonStr = getTrailerJson(movie.getId());
-                ArrayList<Trailer> trailerArr = getTrailerDataFromJson(trailerJsonStr);
+                ArrayList<Trailer> trailerArr;
+                String trailerJsonStr = getParamJson(movie.getId(), "/videos?");
+                if(trailerJsonStr != null) {
+                    trailerArr = getTrailerDataFromJson(trailerJsonStr);
+                } else {
+                    trailerArr = new ArrayList<>();
+                }
                 movie.setTrailers(trailerArr);
+
+                //Get reviews
+                ArrayList<Review> reviewsArr;
+                String reviewsJsonStr = getParamJson(movie.getId(), "/reviews?");
+                if(reviewsJsonStr != null) {
+                    reviewsArr = getReviewDataFromJson(reviewsJsonStr);
+                } else {
+                    reviewsArr = new ArrayList<>();
+                }
+                movie.setReviews(reviewsArr);
 
                 movieArr.add(movie);
             }
@@ -265,21 +280,20 @@ public class MovieFragment extends Fragment {
             }
         }
 
-        private String getTrailerJson(int movieId) {
+        private String getParamJson(int movieId, String param) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
-            String trailerJsonStr = null;
+            String jsonStr = null;
 
             String apiKey = getString(R.string.api_key_moviedb);
 
             try {
                 final String TRAILER_BASE_URL = "http://api.themoviedb.org/3/movie/";
-                final String VIDEO_PARAM = "/videos?";
                 final String API_PARAM = "api_key";
 
-                String base = TRAILER_BASE_URL + Integer.toString(movieId) + VIDEO_PARAM;
+                String base = TRAILER_BASE_URL + Integer.toString(movieId) + param;
 
                 Uri builtUri = Uri.parse(base).buildUpon()
                         .appendQueryParameter(API_PARAM, apiKey)
@@ -290,6 +304,12 @@ public class MovieFragment extends Fragment {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
+
+                int responseCode = urlConnection.getResponseCode();
+
+                if(responseCode >= 400 && responseCode <= 499) {
+                    return null;
+                }
 
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuilder buffer = new StringBuilder();
@@ -306,7 +326,7 @@ public class MovieFragment extends Fragment {
                 if(buffer.length() == 0) {
                     return null;
                 }
-                trailerJsonStr = buffer.toString();
+                jsonStr = buffer.toString();
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error", e);
@@ -323,7 +343,7 @@ public class MovieFragment extends Fragment {
                 }
             }
 
-            return trailerJsonStr;
+            return jsonStr;
         }
 
         private ArrayList<Trailer> getTrailerDataFromJson(String trailersJsonStr)
@@ -351,6 +371,33 @@ public class MovieFragment extends Fragment {
             }
 
             return trailerArr;
+        }
+
+        private ArrayList<Review> getReviewDataFromJson(String reviewsJsonStr)
+                throws JSONException {
+
+            final String REVIEW_RESULTS = "results";
+            final String REVIEW_AUTHOR = "author";
+            final String REVIEW_CONTENT = "content";
+
+            JSONObject reviewsJson = new JSONObject(reviewsJsonStr);
+            JSONArray reviewsJArray = reviewsJson.getJSONArray(REVIEW_RESULTS);
+
+            ArrayList<Review> reviewsArr = new ArrayList<>();
+
+            for(int i = 0; i < reviewsJArray.length(); i++) {
+                JSONObject reviewJ = reviewsJArray.getJSONObject(i);
+
+                String author;
+                String content;
+
+                author = reviewJ.getString(REVIEW_AUTHOR);
+                content = reviewJ.getString(REVIEW_CONTENT);
+
+                reviewsArr.add(new Review(author, content));
+            }
+
+            return reviewsArr;
         }
     }
 }

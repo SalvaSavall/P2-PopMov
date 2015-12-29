@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -44,7 +44,7 @@ public class MovieDetailFragment extends Fragment {
         if(mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(createShareTrailerIntent());
         } else {
-            Log.d(LOG_TAG, "Share Action Provider is null");
+            Log.e(LOG_TAG, "Share Action Provider is null");
         }
     }
 
@@ -53,6 +53,7 @@ public class MovieDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         ArrayList<Trailer> arrTrailer;
+        ArrayList<Review> arrReviews;
 
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
@@ -94,6 +95,22 @@ public class MovieDetailFragment extends Fragment {
                 if(i==0) {
                     shareTrailerString = "http://www.youtube.com/watch?v=" + arrTrailer.get(i).getKey();
                 }
+            }
+
+            //Reviews views
+            LinearLayout layoutDetailReviews = (LinearLayout) rootView.findViewById(R.id.layoutDetailReviews);
+            arrReviews = movie.getReviews();
+
+            for(int i=0; i<arrReviews.size(); i++) {
+                View viewReview = inflater.inflate(R.layout.review_item, null);
+
+                TextView textView = (TextView) viewReview.findViewById(R.id.textAuthorReview);
+                textView.setText(arrReviews.get(i).getAuthor());
+
+                TextView textViewCont = (TextView) viewReview.findViewById(R.id.textContentReview);
+                textViewCont.setText(arrReviews.get(i).getContent());
+
+                layoutDetailReviews.addView(viewReview);
             }
         }
 
