@@ -75,13 +75,14 @@ public class MovieDetailFragment extends Fragment {
             textReleaseDate.setText(movie.getRelease());
 
             TextView textRating = (TextView) rootView.findViewById(R.id.textRating);
-            textRating.setText(String.valueOf(movie.getRating())+"/10");
+            String stringTemp = String.valueOf(movie.getRating())+"/10";
+            textRating.setText(stringTemp);
 
             //Trailers views
             LinearLayout layoutDetailTrailers = (LinearLayout) rootView.findViewById(R.id.layoutDetailTrailers);
             arrTrailer = movie.getTrailers();
             for(int i=0; i< arrTrailer.size(); i++) {
-                View viewTrailer = inflater.inflate(R.layout.trailer_item, null);
+                View viewTrailer = inflater.inflate(R.layout.trailer_item, layoutDetailTrailers, false);
 
                 TextView textView = (TextView) viewTrailer.findViewById(R.id.textTrailer);
                 textView.setText(arrTrailer.get(i).getName());
@@ -100,9 +101,8 @@ public class MovieDetailFragment extends Fragment {
             //Reviews views
             LinearLayout layoutDetailReviews = (LinearLayout) rootView.findViewById(R.id.layoutDetailReviews);
             arrReviews = movie.getReviews();
-
             for(int i=0; i<arrReviews.size(); i++) {
-                View viewReview = inflater.inflate(R.layout.review_item, null);
+                View viewReview = inflater.inflate(R.layout.review_item, layoutDetailReviews, false);
 
                 TextView textView = (TextView) viewReview.findViewById(R.id.textAuthorReview);
                 textView.setText(arrReviews.get(i).getAuthor());

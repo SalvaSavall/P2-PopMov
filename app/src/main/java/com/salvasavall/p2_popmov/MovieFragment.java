@@ -290,10 +290,10 @@ public class MovieFragment extends Fragment {
             String apiKey = getString(R.string.api_key_moviedb);
 
             try {
-                final String TRAILER_BASE_URL = "http://api.themoviedb.org/3/movie/";
+                final String BASE_URL = "http://api.themoviedb.org/3/movie/";
                 final String API_PARAM = "api_key";
 
-                String base = TRAILER_BASE_URL + Integer.toString(movieId) + param;
+                String base = BASE_URL + Integer.toString(movieId) + param;
 
                 Uri builtUri = Uri.parse(base).buildUpon()
                         .appendQueryParameter(API_PARAM, apiKey)
